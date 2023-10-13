@@ -13,20 +13,20 @@ rescue system).
 # FreeBSD VM image
 
 We can use the official FreeBSD VM image to install the system - however we do
-need to patch this before writing to thw VM disc (see
+need to patch this before writing to the VM disc (see
 https://gist.github.com/pandrewhk/2d62664bfb74a504b7f4a894fc85eb97) 
 
 To patch the image you will need an existing FreeBSD host (any architecture).
 
 a.  On the existing FreeBSD host download the appropriate FreeBSD raw VM image 
 
-    curl https://download.freebsd.org/releases/VM-IMAGES/13.2-RELEASE/aarch64/Latest/FreeBSD-13.2-RELEASE-arm64-aarch64.raw.xz)
+    fetch https://download.freebsd.org/releases/VM-IMAGES/13.2-RELEASE/aarch64/Latest/FreeBSD-13.2-RELEASE-arm64-aarch64.raw.xz
 
 b.  Mount the image as a loopback device 
 
     unxz FreeBSD-13.2-RELEASE-arm64-aarch64.raw.xz
-    mdconfig -u1 FreeBSD-13.2-RELEASE-amd64.raw 
-    mount /dev/md1p4 /mnt
+    mdconfig -u1 FreeBSD-13.2-RELEASE-arm64-aarch64.raw 
+    mount /dev/md1p3 /mnt
     printf 'sshd_enable="YES"\nsshd_flags="-o PermitRootLogin=yes"\ndevmatch_blacklist="virtio_random.ko"\n' | tee -a /mnt/etc/rc.conf
     umask 077
     mkdir /mnt/root/.ssh
@@ -39,8 +39,8 @@ c.  Make any other necessary changes to the base image (eg. growfs_enable="NO" i
 d.  Unmount the image and recompress
 
     umount /mnt
-    mdconfig -d -u 0
-    xz FreeBSD-13.2-RELEASE-amd64.raw 
+    mdconfig -d -u 1
+    xz FreeBSD-13.2-RELEASE-arm64-aarch64.raw 
 
 e.  Make sure that the image available (http/ftp) - (eg. python3 -m http.server)
 
